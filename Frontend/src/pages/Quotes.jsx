@@ -249,10 +249,28 @@ const Quotes = () => {
             const link = document.createElement('a')
             link.href = url
 
-            // ✅ Use quoteNo for filename
-            const fileName = `Quotation-${quoteNo}.pdf`
-            link.setAttribute('download', fileName)
+            let fileName = 'Quotation.pdf'
 
+            if (quoteNo) {
+
+                const cleanQuoteNo = String(quoteNo).replace('GTS-PO-', '')
+                fileName = `Quotation-${cleanQuoteNo}.pdf`
+            } else {
+
+                const contentDisposition = response.headers['content-disposition']
+                if (contentDisposition) {
+                    const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)
+                    if (filenameMatch && filenameMatch[1]) {
+                        fileName = filenameMatch[1].replace(/['"]/g, '')
+                    }
+                } else {
+
+                    const timestamp = new Date().getTime()
+                    fileName = `Quotation-${timestamp}.pdf`
+                }
+            }
+
+            link.setAttribute('download', fileName)
             document.body.appendChild(link)
             link.click()
             link.remove()
@@ -293,7 +311,7 @@ const Quotes = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-            {/* Header */}
+
             <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-40">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex justify-between items-center">
@@ -414,12 +432,13 @@ const Quotes = () => {
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center justify-end gap-2">
                                                     <button
-                                                        onClick={() => downloadPDF(quote._id)}
+                                                        onClick={() => downloadPDF(quote._id, quote.quoteNo)} 
                                                         className="p-2 text-gray-500 hover:text-emerald-600 rounded-lg hover:bg-emerald-50 transition"
                                                         title="Download PDF"
                                                     >
                                                         <Download size={18} />
                                                     </button>
+
                                                     <button
                                                         onClick={() => handleEdit(quote)}
                                                         className="p-2 text-gray-500 hover:text-emerald-600 rounded-lg hover:bg-emerald-50 transition"
@@ -473,7 +492,7 @@ const Quotes = () => {
                                     </div>
 
                                     <div className="flex justify-end gap-3">
-                                     
+
                                         <button
                                             onClick={() => downloadPDF(quote._id, quote.quoteNo)}
                                             className="p-2 text-gray-500 hover:text-emerald-600 rounded-lg hover:bg-emerald-50 transition"
@@ -548,7 +567,7 @@ const Quotes = () => {
                                     </label>
                                     <input
                                         type="text"
-                                        value={editingQuote ? quoteNo : `Will be: ${new Date().getFullYear().toString().slice(-2)}${(new Date().getMonth() + 1).toString().padStart(2, '0')}${new Date().getDate().toString().padStart(2, '0')}...GTS`}
+                                        value={editingQuote ? editingQuote.quoteNo || '' : `Will be: ${new Date().getFullYear().toString().slice(-2)}${(new Date().getMonth() + 1).toString().padStart(2, '0')}${new Date().getDate().toString().padStart(2, '0')}...GTS`}
                                         readOnly
                                         className="w-full border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 text-gray-500 cursor-not-allowed"
                                     />
@@ -621,7 +640,7 @@ const Quotes = () => {
                                 </div>
                             </div>
 
-                            <div>
+                           <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Line Items <span className="text-red-500">*</span>
                                 </label>
@@ -656,7 +675,7 @@ const Quotes = () => {
                                                         <input
                                                             type="text"
                                                             value={item.note || ''}
-                                                            onChange={(e) => handleItemChange(index, 'note', e.target.value)}
+                                                             onChange={(e) => handleItemChange(index, 'note', e.target.value)}
                                                             className="w-full border border-gray-200 rounded px-2 py-1 text-sm"
                                                             placeholder="Note (optional)"
                                                         />
