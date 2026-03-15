@@ -48,7 +48,7 @@ const Login = () => {
         if (!validateForm()) return
         setLoading(true)
 
-        axios.post("/api/auth/login", {
+        axios.post("http://localhost:3000/api/auth/login", {
             email: formData.email,
             password: formData.password
         })

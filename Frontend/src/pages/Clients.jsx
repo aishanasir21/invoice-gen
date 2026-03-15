@@ -48,7 +48,7 @@ const Clients = () => {
     const fetchClients = async () => {
         try {
             const token = localStorage.getItem('token')
-            const res = await axios.get('/api/client/getClients', {
+            const res = await axios.get('http://localhost:3000/api/client/getClients', {
                 headers: { Authorization: `Bearer ${token}` }
             })
             setClients(res.data.data || [])
@@ -85,8 +85,8 @@ const Clients = () => {
         try {
             const token = localStorage.getItem('token')
             const url = editingClient 
-                ? `/api/client/updateClient/${editingClient._id}`
-                : '/api/client/createClient'
+                ? `http://localhost:3000/api/client/updateClient/${editingClient._id}`
+                : 'http://localhost:3000/api/client/createClient'
 
             const res = await axios[editingClient ? 'put' : 'post'](url, formData, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -138,7 +138,7 @@ const Clients = () => {
 
         try {
             const token = localStorage.getItem('token')
-            await axios.delete(`/api/client/deleteClient/${id}`, {
+            await axios.delete(`http://localhost:3000/api/client/deleteClient/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
             await fetchClients()

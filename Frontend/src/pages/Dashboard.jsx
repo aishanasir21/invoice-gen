@@ -82,7 +82,7 @@ const Dashboard = () => {
         return
       }
 
-      const response = await axios.get('/api/auth/me', {
+      const response = await axios.get('http://localhost:3000/api/auth/me', {
         headers: { Authorization: `Bearer ${token}` }
       })
       
@@ -118,8 +118,8 @@ const Dashboard = () => {
       const headers = { Authorization: `Bearer ${token}` }
 
       const [clientsRes, quotesRes] = await Promise.all([
-        axios.get('/api/client/getClients', { headers }),
-        axios.get('/api/quote/getQuotes', { headers })
+        axios.get('http://localhost:3000/api/client/getClients', { headers }),
+        axios.get('http://localhost:3000/api/quote/getQuotes', { headers })
       ])
 
       const quotes = quotesRes.data.data || []
@@ -186,8 +186,8 @@ const Dashboard = () => {
       const headers = { Authorization: `Bearer ${token}` }
       
       const [quotesRes, clientsRes] = await Promise.all([
-        axios.get('/api/quote/getQuotes', { headers }),
-        axios.get('/api/client/getClients', { headers })
+        axios.get('http://localhost:3000/api/quote/getQuotes', { headers }),
+        axios.get('http://localhost:3000/api/client/getClients', { headers })
       ])
 
       const allQuotes = quotesRes.data.data || []

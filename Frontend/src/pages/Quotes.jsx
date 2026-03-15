@@ -60,8 +60,8 @@ const Quotes = () => {
             const headers = { Authorization: `Bearer ${token}` }
 
             const [quotesRes, clientsRes] = await Promise.all([
-                axios.get('/api/quote/getQuotes', { headers }),
-                axios.get('/api/client/getClients', { headers })
+                axios.get('http://localhost:3000/api/quote/getQuotes', { headers }),
+                axios.get('http://localhost:3000/api/client/getClients', { headers })
             ])
 
             setQuotes(quotesRes.data.data || [])
@@ -163,8 +163,8 @@ const Quotes = () => {
             }
 
             const url = editingQuote
-                ? `/api/quote/updateQuote/${editingQuote._id}`
-                : '/api/quote/createQuote'
+                ? `http://localhost:3000/api/quote/updateQuote/${editingQuote._id}`
+                : 'http://localhost:3000/api/quote/createQuote'
 
             const res = await axios[editingQuote ? 'put' : 'post'](url, quoteData, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -226,7 +226,7 @@ const Quotes = () => {
 
         try {
             const token = localStorage.getItem('token')
-            await axios.delete(`/api/quote/deleteQuote/${id}`, {
+            await axios.delete(`http://localhost:3000/api/quote/deleteQuote/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
             await fetchData()
@@ -240,7 +240,7 @@ const Quotes = () => {
     const downloadPDF = async (id, quoteNo) => {
         try {
             const token = localStorage.getItem('token')
-            const response = await axios.get(`/api/quote/downloadQuotePDF/${id}`, {
+            const response = await axios.get(`http://localhost:3000/api/quote/downloadQuotePDF/${id}`, {
                 headers: { Authorization: `Bearer ${token}` },
                 responseType: 'blob'
             })

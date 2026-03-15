@@ -62,7 +62,7 @@ const Signup = () => {
         if (!validateForm()) return
         setLoading(true)
 
-        axios.post("/api/auth/register", {
+        axios.post("http://localhost:3000/api/auth/register", {
             name: `${formData.firstName} ${formData.lastName}`,
             email: formData.email,
             password: formData.password
